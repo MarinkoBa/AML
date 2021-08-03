@@ -7,15 +7,15 @@
 	- data 
 		- test
 			- COVID19
-       - *.jpg
-      - NORMAL
-       - *.jpg
-      - PNEUMONIA
-       - *.jpg
+       				- *.jpg
+			- NORMAL
+       				- *.jpg
+			- PNEUMONIA
+       				- *.jpg
 		- train
 			- COVID19
-       - *.jpg
-      - NORMAL
-       - *.jpg
-      - PNEUMONIA
-       - *.jpg
+       				- *.jpg
+			- NORMAL
+       				- *.jpg
+			- PNEUMONIA
+       				- *.jpg
