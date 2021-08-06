@@ -56,7 +56,7 @@ if __name__ == "__main__":
     data_path = ...  # insert absolute path to the data directory
     train_test = 'train'  # train or test
     target_resolution = (299, 299)  # modify here if other resolution needed
-    batch_size_train = 20
+    batch_size_train = 10
     batch_size_eval = 10
     model_name = 'model__CE__' + str(target_resolution[0]) + '_' + str(target_resolution[1]) + '__b' + str(batch_size_train) + '__lr001'  # resolution_batchsize_learning_rate
     model_name_optimizer = model_name + '_optim'  # resolution_batchsize_learning_rate
@@ -72,6 +72,7 @@ if __name__ == "__main__":
     model.to(device)
 
     if torch_model!=None:
+        print("Continue training with stored model...")
         model.load_state_dict(torch_model, strict=False)  # enable if training continued
 
     criterion = nn.CrossEntropyLoss()
@@ -80,6 +81,7 @@ if __name__ == "__main__":
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     if torch_model_optim!=None:
+        print("Continue training with stored optimizer...")
         optimizer.load_state_dict(torch_model_optim)
 
 
@@ -124,7 +126,7 @@ if __name__ == "__main__":
                     eval_data = eval_data.to(device)
                     eval_data = eval_data.double()
 
-                    eval_pred_label = model(eval_data, batch_size_train)
+                    eval_pred_label = model(eval_data, batch_size_eval)
                     eval_batch_loss = criterion(eval_pred_label, eval_label)
 
                     epoch_eval_loss.append(eval_batch_loss.item())
@@ -135,11 +137,11 @@ if __name__ == "__main__":
                     print("New best eval batch loss: " + str(np.mean(epoch_eval_loss)))
                     print("Store model...")
 
-                    curr_best_batch_loss = np.mean(epoch_eval_loss)
+                    curr_best_eval_batch_loss = np.mean(epoch_eval_loss)
 
                     torch.save(model.state_dict(), model_name)
                     torch.save(optimizer.state_dict(), model_name_optimizer)
-                    best_loss_log_file.write(str(curr_best_batch_loss) + '\n')
+                    best_loss_log_file.write(str(curr_best_eval_batch_loss) + '\n')
                     best_loss_log_file.flush()
 
 
