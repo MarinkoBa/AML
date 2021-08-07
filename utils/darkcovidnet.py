@@ -16,7 +16,7 @@ class DarkCovidNet(nn.Module):
 
     '''
 
-    def __init__(self, in_channels, num_labels):
+    def __init__(self, in_channels, num_labels,batch_size):
         super(DarkCovidNet, self).__init__()
         # 4 Max Pooling Layers of the network, all with kernel_size = 2 and stride = 2
         self.max_pool_1 = nn.MaxPool2d(kernel_size=2, stride=2)
@@ -40,12 +40,12 @@ class DarkCovidNet(nn.Module):
         self.dn_layer_4 = DN_Layer(in_channels=128, out_channels=256)
 
         # last Convolution -> maps to channels = number of classes
-        self.conv = nn.Conv2d(in_channels=256, out_channels=num_labels, kernel_size=(1, 1), stride=(1, 1))
+        self.conv = nn.Conv2d(in_channels=256, out_channels=num_labels, kernel_size=(1, 1), stride=(1, 1),padding=1)
         self.bn_layer = nn.BatchNorm2d(num_labels)
         self.relu = nn.ReLU()
 
         # Linear layer
-        self.linear = nn.Linear(338, num_labels)
+        self.linear = nn.Linear(in_features=batch_size*13*13*num_labels, out_features=num_labels)
 
     def forward(self, x):
         # first two DN-layers (DarkNetLayers)
