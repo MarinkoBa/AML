@@ -2,7 +2,17 @@ import torch.nn as nn
 
 
 class DarkCovidNet(nn.Module):
+    '''
+        DarkCovidNet was developed by Ozturk 2020 based on the Darknet-19 model.
+        Model was created to fulfill classification task of 2D-CT images for the cases of binary (Covid, No-Finings) and multi-classification (Covid, No-Finings, Pneumonia).
 
+        Layer layout of the network:
+        C: Convolutional Layer
+        M: Max-Pooling
+
+        C1-M1-C2-M2-C3-C4-C5-M3-C6-C7-C8-M4-C9-C10-C11-M5-C12-C13-C14-C15-C16-C17-Flatten-Linear
+
+        '''
 
     def __init__(self):
         super(DarkCovidNet, self).__init__()
