@@ -5,6 +5,7 @@ import os
 from utils.dataloader import ChestXRayDataset
 from tqdm import tqdm
 from utils.xception import XCeption
+from utils.darkcovidnet import DarkCovidNet
 import numpy as np
 
 
@@ -55,10 +56,14 @@ if __name__ == "__main__":
 
     data_path = ...  # insert absolute path to the data directory
     train_test = 'train'  # train or test
-    target_resolution = (299, 299)  # modify here if other resolution needed
+    architecture = "DarkCovid"  # or xception
+    if architecture == "DarkCovid":
+        target_resolution = (256, 256)
+    else:
+        target_resolution = (299, 299)  # modify here if other resolution needed
     batch_size_train = 10
     batch_size_eval = 10
-    model_name = 'model__CE__' + str(target_resolution[0]) + '_' + str(target_resolution[1]) + '__b' + str(batch_size_train) + '__lr001'  # resolution_batchsize_learning_rate
+    model_name = 'model__' + architecture + '__CE__' + str(target_resolution[0]) + '_' + str(target_resolution[1]) + '__b' + str(batch_size_train) + '__lr001'  # resolution_batchsize_learning_rate
     model_name_optimizer = model_name + '_optim'  # resolution_batchsize_learning_rate
 
     loss_log_file = create_loss_log_file(model_name)
@@ -67,7 +72,10 @@ if __name__ == "__main__":
 
     device = torch.device(0 if torch.cuda.is_available() else "cpu")
 
-    model = XCeption(device=device)
+    if architecture == 'DarkCovid':
+        model = DarkCovidNet(in_channels=3, num_labels=3, batch_size=batch_size_train, device=device)
+    else:
+        model = XCeption(device=device)
     model = model.double()
     model.to(device)
 
@@ -103,7 +111,10 @@ if __name__ == "__main__":
                 train_data = train_data.to(device)
                 train_data = train_data.double()
 
-                pred_label = model(train_data, batch_size_train)
+                if architecture == 'DarkCovid':
+                    pred_label = model(train_data)
+                else:
+                    pred_label = model(train_data, batch_size_train)
 
                 train_batch_loss = criterion(pred_label, train_label)
 
@@ -126,7 +137,10 @@ if __name__ == "__main__":
                     eval_data = eval_data.to(device)
                     eval_data = eval_data.double()
 
-                    eval_pred_label = model(eval_data, batch_size_eval)
+                    if architecture == 'DarkCovid':
+                        eval_pred_label = model(eval_data)
+                    else:
+                        eval_pred_label = model(eval_data, batch_size_eval)
                     eval_batch_loss = criterion(eval_pred_label, eval_label)
 
                     epoch_eval_loss.append(eval_batch_loss.item())
