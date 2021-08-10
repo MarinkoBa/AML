@@ -2,12 +2,14 @@ import torch
 from torchvision import transforms
 from PIL import Image
 import glob
+import numpy as np
+
 
 
 class ChestXRayDataset(torch.utils.data.Dataset):
     """Chest X Ray dataset."""
 
-    def __init__(self, data_path, target_resolution):
+    def __init__(self, data_path, target_resolution, train_eval):
         """
         Args:
             data_path (string): Path to dir with all the data.
@@ -22,6 +24,14 @@ class ChestXRayDataset(torch.utils.data.Dataset):
             img = Image.open(i)
             if img.mode == 'RGB':
                 self.all_images.append(i)
+
+        np.random.seed(0)
+        np.random.shuffle(self.all_images)
+
+        if train_eval == 'train':
+            self.all_images = self.all_images[:int(len(self.all_images)*0.7)]
+        else:
+            self.all_images = self.all_images[int(len(self.all_images)*0.7):]
 
 
     def __len__(self):
