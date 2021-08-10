@@ -19,3 +19,6 @@
        				- *.jpg
 			- PNEUMONIA
        				- *.jpg
+
+#### Dataset
+For training of the network we used the Chest X-ray dataset from kaggle (https://www.kaggle.com/prashant268/chest-xray-covid19-pneumonia)
