@@ -83,7 +83,11 @@ class XCeption(nn.Module):
 
         self.globalAvgPool = torch.nn.DataParallel(nn.AvgPool2d(kernel_size=(10,10), padding=0).to(device))
 
-        self.denseLayer = torch.nn.DataParallel(nn.Linear(in_features=2048, out_features=3).to(device))
+        self.denseLayer1 = torch.nn.DataParallel(nn.Linear(in_features=2048, out_features=256).to(device))
+
+        self.leakyRelu = torch.nn.DataParallel(nn.LeakyReLU().to(device))
+
+        self.denseLayer2 = torch.nn.DataParallel(nn.Linear(in_features=256, out_features=3).to(device))
 
         self.softmax = torch.nn.DataParallel(nn.Softmax().to(device))
 
@@ -190,7 +194,11 @@ class XCeption(nn.Module):
 
         x = x.view(batch_size, 2048)
 
-        x = self.denseLayer(x)
+        x = self.denseLayer1(x)
+
+        x = self.leakyRelu(x)
+
+        x = self.denseLayer2(x)
 
         x = self.softmax(x)
         return x
