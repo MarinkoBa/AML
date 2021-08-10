@@ -16,36 +16,42 @@ class DarkCovidNet(nn.Module):
 
     '''
 
-    def __init__(self, in_channels, num_labels,batch_size):
+    def __init__(self, in_channels, num_labels, batch_size, device):
         super(DarkCovidNet, self).__init__()
+
+        self.device = device
+
         # 4 Max Pooling Layers of the network, all with kernel_size = 2 and stride = 2
-        self.max_pool_1 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.max_pool_2 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.max_pool_3 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.max_pool_4 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.max_pool_5 = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.max_pool_1 = torch.nn.DataParallel(nn.MaxPool2d(kernel_size=2, stride=2).to(device))
+        self.max_pool_2 = torch.nn.DataParallel(nn.MaxPool2d(kernel_size=2, stride=2).to(device))
+        self.max_pool_3 = torch.nn.DataParallel(nn.MaxPool2d(kernel_size=2, stride=2).to(device))
+        self.max_pool_4 = torch.nn.DataParallel(nn.MaxPool2d(kernel_size=2, stride=2).to(device))
+        self.max_pool_5 = torch.nn.DataParallel(nn.MaxPool2d(kernel_size=2, stride=2).to(device))
 
         # Convolutional Operations
 
-        self.dn_layer_1 = DN_Layer(in_channels=in_channels, out_channels=8)
-        self.dn_layer_2 = DN_Layer(in_channels=8, out_channels=16)
+        self.dn_layer_1 = torch.nn.DataParallel(DN_Layer(in_channels=in_channels, out_channels=8).to(device))
+        self.dn_layer_2 = torch.nn.DataParallel(DN_Layer(in_channels=8, out_channels=16).to(device))
 
         # 3xConv Blocks
-        self.dn_block_1 = DN_Block(in_channels=16, out_channels=32)
-        self.dn_block_2 = DN_Block(in_channels=32, out_channels=64)
-        self.dn_block_3 = DN_Block(in_channels=64, out_channels=128)
-        self.dn_block_4 = DN_Block(in_channels=128, out_channels=256)
+        self.dn_block_1 = torch.nn.DataParallel(DN_Block(in_channels=16, out_channels=32).to(device))
+        self.dn_block_2 = torch.nn.DataParallel(DN_Block(in_channels=32, out_channels=64).to(device))
+        self.dn_block_3 = torch.nn.DataParallel(DN_Block(in_channels=64, out_channels=128).to(device))
+        self.dn_block_4 = torch.nn.DataParallel(DN_Block(in_channels=128, out_channels=256).to(device))
 
-        self.dn_layer_3 = DN_Layer(in_channels=256, out_channels=128)
-        self.dn_layer_4 = DN_Layer(in_channels=128, out_channels=256)
+        self.dn_layer_3 = torch.nn.DataParallel(DN_Layer(in_channels=256, out_channels=128).to(device))
+        self.dn_layer_4 = torch.nn.DataParallel(DN_Layer(in_channels=128, out_channels=256).to(device))
 
         # last Convolution -> maps to channels = number of classes
-        self.conv = nn.Conv2d(in_channels=256, out_channels=num_labels, kernel_size=(1, 1), stride=(1, 1),padding=1)
-        self.bn_layer = nn.BatchNorm2d(num_labels)
-        self.relu = nn.ReLU()
+        self.conv = torch.nn.DataParallel(nn.Conv2d(in_channels=256, out_channels=num_labels, kernel_size=(1, 1), stride=(1, 1),padding=1).to(device))
+        self.bn_layer = torch.nn.DataParallel(nn.BatchNorm2d(num_labels).to(device))
+        self.relu = torch.nn.DataParallel(nn.ReLU().to(device))
 
         # Linear layer
-        self.linear = nn.Linear(in_features=batch_size*13*13*num_labels, out_features=num_labels)
+        self.linear = torch.nn.DataParallel(nn.Linear(in_features=13*13*num_labels, out_features=num_labels).to(device))
+
+        self.softmax = torch.nn.DataParallel(nn.Softmax().to(device))
+
 
     def forward(self, x):
         # first two DN-layers (DarkNetLayers)
@@ -73,10 +79,12 @@ class DarkCovidNet(nn.Module):
         x = self.relu(x)
 
         # Flatten
-        x = torch.flatten(x)
+        x = torch.flatten(x, start_dim=1)
 
         # Linear
         x = self.linear(x)
+
+        x = self.softmax(x)
 
         return x
 
