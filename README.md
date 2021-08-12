@@ -1,7 +1,9 @@
 # AML
 
-#### The goal is to build a binary/multi class classificator, which will be able to distinguish between COVID-19, Pneumonia and Normal classes of X-ray chest images. Due to the current COVID-19 situation the radiologists could need help while recognizing positive COVID-19 cases. 
+#### The goal is to build a binary/multi class classificator, which will be able to distinguish between COVID-19, Pneumonia and Normal classes of X-ray chest images. Due to the current COVID-19 situation the radiologists could need help while recognizing positive COVID-19 cases.
 
+#### Dataset
+For training of the network we used the Chest X-ray dataset from kaggle (https://www.kaggle.com/prashant268/chest-xray-covid19-pneumonia). Dataset is organized into 2 folders (train, test) and both train and test contain 3 subfolders (COVID19, PNEUMONIA, NORMAL). DataSet contains total 6432 x-ray images and test data have 20% of total images.
 
 #### Chest X Ray images data directory structure:
 	- data 
@@ -20,8 +22,7 @@
 			- PNEUMONIA
        				- *.jpg
 
-#### Dataset
-For training of the network we used the Chest X-ray dataset from kaggle (https://www.kaggle.com/prashant268/chest-xray-covid19-pneumonia)
+
 
 #### Done
 
