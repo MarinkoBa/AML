@@ -16,7 +16,7 @@ y_pred = [1, 2, 2, 0, 1, 2, 1]
 print(confusion_matrix(y_true, y_pred, labels=[0, 1, 2]))
 conf_matrix = confusion_matrix(y_true, y_pred, labels=[0, 1, 2])
 
-# visualization of confusion matrix
+# TODO - method saves as png, visualization of confusion matrix
 df_cm = pd.DataFrame(conf_matrix, index=[i for i in ['NORMAL', 'COVID-19', 'PNEUMONIA']],
                      columns=[i for i in ['NORMAL', 'COVID-19', 'PNEUMONIA']])
 plt.figure(figsize=(10, 7))
@@ -24,6 +24,8 @@ plt.figure(figsize=(10, 7))
 ax = sn.heatmap(df_cm, annot=True, cbar=False, linewidths=.5, cmap='mako')
 plt.show()
 
+# TODO - implement as method, save as text-file, which can be read later -> method
+#
 print(classification_report(y_true, y_pred, target_names=['NORMAL', 'COVID-19', 'PNEUMONIA']))
 report = classification_report(y_true, y_pred, target_names=['NORMAL', 'COVID-19', 'PNEUMONIA'])
 print('x')
