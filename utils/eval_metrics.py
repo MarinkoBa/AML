@@ -20,9 +20,9 @@ conf_matrix = confusion_matrix(y_true, y_pred, labels=[0, 1, 2])
 df_cm = pd.DataFrame(conf_matrix, index=[i for i in ['NORMAL', 'COVID-19', 'PNEUMONIA']],
                      columns=[i for i in ['NORMAL', 'COVID-19', 'PNEUMONIA']])
 plt.figure(figsize=(10, 7))
-ax = sn.heatmap(df_cm, annot=True)
-plt.show()
 
+ax = sn.heatmap(df_cm, annot=True, cbar=False, linewidths=.5, cmap='mako')
+plt.show()
 
 print(classification_report(y_true, y_pred, target_names=['NORMAL', 'COVID-19', 'PNEUMONIA']))
 report = classification_report(y_true, y_pred, target_names=['NORMAL', 'COVID-19', 'PNEUMONIA'])
