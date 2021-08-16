@@ -16,33 +16,3 @@ print(classification_report(y_true, y_pred, target_names=['class1', 'class2', 'c
 report = classification_report(y_true, y_pred, target_names=['class1', 'class2', 'class3'])
 print('x')
 
-def get_counts(truth_labels, pred_labels):
-    '''
-
-    '''
-    ...
-
-
-def calc_recall():
-    # Proportion of actual positives which are correctly classified
-    # TP/(TP+FN)
-    ...
-
-
-def calc_specificity():
-    ...
-
-
-def calc_precision():
-    # TP/(TP+FP)
-    ...
-
-
-def calc_f1score():
-    ...
-
-
-def calc_accuracy():
-    # Proportion of positives and negatives, which are correctly classified
-    # (TP+TN)/(TP+TN+FP+FN)
-    ...
