@@ -34,7 +34,7 @@ For training of the network we used the Chest X-ray dataset from kaggle (https:/
 #### TO DO
 - Implementation of Metrics (Recall, Secificity, Precision, F1-Score, Accuracy)
 - Data Augmentation: Random rotation angle  = 10°, Horisontal Flip and Zoom Range = 0.4
-- Balanced Dataset: ~500x Covid, ~500x Normal, ~500x Pneunomia (randomly picked from the sets) and increase dataset with augmentation to 1500x Covid, 1500x Normal, 1500x Pneunomia. The original train set includes 460 Covid, 1266 Normal and 3418 Pneunomia.
+- Balanced Dataset: ~500x Covid, ~500x Normal, ~500x Pneunomia (randomly picked from the sets) and increase dataset with augmentation to 1500x Covid, 1500x Normal, 1500x Pneunomia. The original train set includes 460 Covid (300 RGB, 124 L, 36 RGBA -> for differences see https://pillow.readthedocs.io/en/stable/handbook/concepts.html#concept-modes), 1266 Normal and 3418 Pneunomia images.
 			
 - Implementation of 2D DenseNet
 - 5-fold Cross Validation to Compare the Models
