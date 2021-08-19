@@ -53,18 +53,25 @@ def load_model_and_optim(model_name, model_name_optimizer):
 
 if __name__ == "__main__":
 
-
     data_path = ...  # insert absolute path to the data directory
     train_test = 'train'  # train or test
-    architecture = "DarkCovid"  # or xception
+    balancing_mode = 'balance_without_aug'  # can be: no | balance_without_aug | balance_with_aug
+
+    architecture = "DarkCovid"  # DarkCovid or xception
     if architecture == "DarkCovid":
         target_resolution = (256, 256)
     else:
         target_resolution = (299, 299)  # modify here if other resolution needed
-    batch_size_train = 10
-    batch_size_eval = 10
-    model_name = 'model__' + architecture + '__CE__' + str(target_resolution[0]) + '_' + str(target_resolution[1]) + '__b' + str(batch_size_train) + '__lr001'  # resolution_batchsize_learning_rate
+
+    batch_size_train = 32
+    batch_size_eval = 32
+    learning_rate = 0.001
+    model_name = 'model__' + architecture + '__CE__' + str(target_resolution[0]) + '_' + str(target_resolution[1]) + '__b' + str(batch_size_train) + '__lr' + str(learning_rate) + "__bm" + balancing_mode  # resolution_batchSize_learningRate_balancingMode
     model_name_optimizer = model_name + '_optim'  # resolution_batchsize_learning_rate
+
+    print("Used NN Architecture: " + architecture)
+    print("Used batch size: " + str(batch_size_train))
+    print("Used learning rate: " + str(learning_rate))
 
     loss_log_file = create_loss_log_file(model_name)
     best_loss_log_file, curr_best_eval_batch_loss = create_current_best_loss_file(model_name)
@@ -86,7 +93,7 @@ if __name__ == "__main__":
     criterion = nn.CrossEntropyLoss()
     criterion.to(device)
 
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     if torch_model_optim!=None:
         print("Continue training with stored optimizer...")
@@ -95,10 +102,10 @@ if __name__ == "__main__":
 
     if train_test == 'train':
 
-        train_dataset = ChestXRayDataset(os.path.join(data_path, train_test), target_resolution, 'train')
+        train_dataset = ChestXRayDataset(os.path.join(data_path, train_test), target_resolution, 'train', balancing_mode)
         train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, drop_last=True)
 
-        eval_dataset = ChestXRayDataset(os.path.join(data_path, train_test), target_resolution, 'eval')
+        eval_dataset = ChestXRayDataset(os.path.join(data_path, train_test), target_resolution, 'eval', balancing_mode)
         eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=batch_size_eval, shuffle=True, drop_last=True)
 
         # label 0 -> normal | label 1 -> covid | label 2 -> pneumonia
