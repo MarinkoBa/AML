@@ -1,10 +1,29 @@
 import torch.nn as nn
 import torch
 
+DENSENET121 = 'densenet-121'
+DENSENET169 = 'densenet-169'
+DENSENET201 = 'densenet-201'
+DENSENET264 = 'densenet-264'
+
 
 class DenseNet(nn.Module):
-    def __init__(self, device, num_classes=3, device_ids=[0], growth_rate=32, layers=[6, 12, 24, 16]):
+    '''
+    TODO Dokumentation
+    '''
+    def __init__(self, device, num_classes=3, device_ids=[0], growth_rate=32, architecture='densenet-121'):
         super(DenseNet, self).__init__()
+        # determine type of densenet
+
+        if architecture is DENSENET169:
+            layers = [6, 12, 32, 32]
+        elif architecture is DENSENET201:
+            layers = [6, 12, 48, 32]
+        elif architecture is DENSENET264:
+            layers = [6, 12, 64, 48]
+        else:
+            # Default: densenet-121
+            layers = [6, 12, 24, 16]
 
         self.device = device
         self.num_classes = num_classes
@@ -62,7 +81,7 @@ class DenseNet(nn.Module):
         self.softmax = nn.Softmax()
 
     def forward(self, x):
-        #x = torch.unsqueeze(x, 1)
+        # x = torch.unsqueeze(x, 1)
 
         # initial Convolution, after this layer output should be 56x56
         x = self.conv(x)
@@ -113,14 +132,13 @@ class DenseBlock(nn.Module):
 
         for i in range(self.n_layers):
             model = DenseLayer(int(i * self.growth_rate + self.in_channels), self.growth_rate)
-            #model = model.double()
+            # model = model.double()
             dense_layer = nn.DataParallel(model, device_ids=device_ids)
             dense_layer.to(device)
             self.dense_layers.append(dense_layer)
 
     def forward(self, x):
         for i in range(self.n_layers):
-
             # in_channels are out_channels from the last layer
             y = self.dense_layers[i](x)
             x = torch.cat([x, y], dim=1)
