@@ -50,22 +50,8 @@ def load_model_and_optim(model_name, model_name_optimizer):
 
     return torch_model, torch_model_optim
 
+def train_network(data_path, train_test, balancing_mode, architecture, batch_size_train, batch_size_eval, learning_rate):
 
-if __name__ == "__main__":
-
-    data_path = ...  # insert absolute path to the data directory
-    train_test = 'train'  # train or test
-    balancing_mode = 'balance_without_aug'  # can be: no | balance_without_aug | balance_with_aug
-
-    architecture = "DarkCovid"  # DarkCovid or xception
-    if architecture == "DarkCovid":
-        target_resolution = (256, 256)
-    else:
-        target_resolution = (299, 299)  # modify here if other resolution needed
-
-    batch_size_train = 32
-    batch_size_eval = 32
-    learning_rate = 0.001
     model_name = 'model__' + architecture + '__CE__' + str(target_resolution[0]) + '_' + str(target_resolution[1]) + '__b' + str(batch_size_train) + '__lr' + str(learning_rate) + "__bm" + balancing_mode  # resolution_batchSize_learningRate_balancingMode
     model_name_optimizer = model_name + '_optim'  # resolution_batchsize_learning_rate
 
@@ -110,7 +96,7 @@ if __name__ == "__main__":
 
         # label 0 -> normal | label 1 -> covid | label 2 -> pneumonia
         # train
-        for epoch in range(10000):
+        for epoch in range(100):
             model.train()
             epoch_train_loss = []
             for train_idx, (train_data, train_label) in enumerate(tqdm(train_dataloader, desc='Train')):
@@ -136,7 +122,7 @@ if __name__ == "__main__":
             print("Avg train batch loss, epoch: " + str(epoch) + ": " + str(np.mean(epoch_train_loss)))
             write_stats_after_epoch(np.mean(epoch_train_loss), epoch, 'Train', loss_log_file)
 
-            if epoch % 3 == 0:
+            if epoch % 1 == 0:
                 model.eval()
                 epoch_eval_loss = []
                 for eval_idx, (eval_data, eval_label) in enumerate(tqdm(eval_dataloader, desc='Eval')):
@@ -172,3 +158,34 @@ if __name__ == "__main__":
 
 
         loss_log_file.close()
+
+
+if __name__ == "__main__":
+
+    data_path = ...  # insert absolute path to the data directory
+    train_test = 'train'  # train or test
+    balancing_mode = 'balance_without_aug'  # can be: no | balance_without_aug | balance_with_aug
+
+    architecture = "DarkCovid"  # DarkCovid or xception
+    if architecture == "DarkCovid":
+        target_resolution = (256, 256)
+    else:
+        target_resolution = (299, 299)  # modify here if other resolution needed
+
+    batch_size_train = 32
+    batch_size_eval = 32
+    learning_rate = 0.001
+
+    architecture_arr = ['DarkCovid', 'xception']
+    balancing_mode_arr = ["no", "balance_without_aug", "balance_with_aug"]
+    learning_rate_arr = [0.001, 0.003, 0.005]
+
+    for a in architecture_arr:
+        for b in balancing_mode_arr:
+            for lr in learning_rate_arr:
+
+                balancing_mode = b
+                architecture = a
+                learning_rate = lr
+                train_network(data_path, train_test, balancing_mode, architecture, batch_size_train, batch_size_eval, learning_rate)
+
