@@ -22,7 +22,7 @@ class DenseNet(nn.Module):
         elif architecture is DENSENET264:
             layers = [6, 12, 64, 48]
         else:
-            # Default: densenet-121
+            # Default: DENSENET-121
             layers = [6, 12, 24, 16]
 
         self.device = device
@@ -63,6 +63,7 @@ class DenseNet(nn.Module):
                                         device=device,
                                         device_ids=device_ids)
         channels = in_channel_1 * 2
+
         # Transition Layers
         self.transition1 = nn.DataParallel(TransitionLayer(in_channels=in_channel_1 * 2),
                                            device_ids=device_ids).to(device)
@@ -81,8 +82,6 @@ class DenseNet(nn.Module):
         self.softmax = nn.Softmax()
 
     def forward(self, x):
-        # x = torch.unsqueeze(x, 1)
-
         # initial Convolution, after this layer output should be 56x56
         x = self.conv(x)
         x = self.batch_norm(x)
@@ -115,8 +114,7 @@ class DenseNet(nn.Module):
         x = self.global_avg_pool(x)
         x = torch.flatten(x, start_dim=1)
         x = self.linear(x)
-
-        x = self.softmax(x)
+        #x = self.softmax(x)
 
         return x
 

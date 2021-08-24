@@ -16,7 +16,7 @@ class DarkCovidNet(nn.Module):
 
     '''
 
-    def __init__(self, in_channels, num_labels, batch_size, device):
+    def __init__(self, in_channels, num_labels, device):
         super(DarkCovidNet, self).__init__()
 
         self.device = device

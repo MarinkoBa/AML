@@ -3,7 +3,7 @@ from torchvision import transforms
 from PIL import Image
 import glob
 import numpy as np
-import AMLFinalProject.AML.utils.augmentator as augmentator
+import utils.augmentator as augmentator
 
 
 class ChestXRayDataset(torch.utils.data.Dataset):

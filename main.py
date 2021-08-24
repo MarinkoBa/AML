@@ -6,26 +6,26 @@ from utils.dataloader import ChestXRayDataset
 from tqdm import tqdm
 from utils.xception import XCeption
 from utils.darkcovidnet import DarkCovidNet
+from utils.densenet import DenseNet, DENSENET169, DENSENET201, DENSENET264, DENSENET121
 import numpy as np
 
 
 def create_loss_log_file(loss_log_file_name):
-
     f = open('log/' + loss_log_file_name + '_loss_log.txt', 'a')
     f.write('Log file start for the test: ' + loss_log_file_name + '_loss_log.txt\n')
 
     return f
 
-def create_current_best_loss_file(best_loss_file_name):
 
-    if (os.path.isfile('log/' +  best_loss_file_name + '_best_loss_log.txt')):
-            f = open('log/' +  best_loss_file_name + '_best_loss_log.txt', "r+")
-            lines = f.read().splitlines()
-            if lines!=[]:
-                best_loss = lines[-1]
-                best_loss = float(best_loss)
-            else:
-                best_loss = 100.0
+def create_current_best_loss_file(best_loss_file_name):
+    if (os.path.isfile('log/' + best_loss_file_name + '_best_loss_log.txt')):
+        f = open('log/' + best_loss_file_name + '_best_loss_log.txt', "r+")
+        lines = f.read().splitlines()
+        if lines != []:
+            best_loss = lines[-1]
+            best_loss = float(best_loss)
+        else:
+            best_loss = 100.0
 
     else:
         f = open('log/' + best_loss_file_name + '_best_loss_log.txt', 'w')
@@ -33,14 +33,15 @@ def create_current_best_loss_file(best_loss_file_name):
 
     return f, best_loss
 
+
 def write_stats_after_epoch(loss_epoch, epoch, train_eval, file):
     print(train_eval + ', epoch: ' + str(epoch))
     print('Loss: ' + str(loss_epoch))
     print('')
     file.write(train_eval + ', lossEpoch' + str(epoch) + ', CELoss Mean: ' + str(loss_epoch) + '\n')
 
-def load_model_and_optim(model_name, model_name_optimizer):
 
+def load_model_and_optim(model_name, model_name_optimizer):
     torch_model = None
     torch_model_optim = None
 
@@ -50,9 +51,12 @@ def load_model_and_optim(model_name, model_name_optimizer):
 
     return torch_model, torch_model_optim
 
-def train_network(data_path, train_test, balancing_mode, architecture, batch_size_train, batch_size_eval, learning_rate):
 
-    model_name = 'model__' + architecture + '__CE__' + str(target_resolution[0]) + '_' + str(target_resolution[1]) + '__b' + str(batch_size_train) + '__lr' + str(learning_rate) + "__bm" + balancing_mode + "__NOSOFTMAX" # resolution_batchSize_learningRate_balancingMode
+def train_network(data_path, train_test, balancing_mode, architecture, batch_size_train, batch_size_eval,
+                  learning_rate):
+    model_name = 'model__' + architecture + '__CE__' + str(target_resolution[0]) + '_' + str(
+        target_resolution[1]) + '__b' + str(batch_size_train) + '__lr' + str(
+        learning_rate) + "__bm" + balancing_mode + "__NOSOFTMAX"  # resolution_batchSize_learningRate_balancingMode
     model_name_optimizer = model_name + '_optim'  # resolution_batchsize_learning_rate
 
     print("Used NN Architecture: " + architecture)
@@ -67,12 +71,15 @@ def train_network(data_path, train_test, balancing_mode, architecture, batch_siz
 
     if architecture == 'DarkCovid':
         model = DarkCovidNet(in_channels=3, num_labels=3, batch_size=batch_size_train, device=device)
+    elif architecture == 'DenseNet':
+        model = DenseNet(device=device, architecture=DENSENET121)
     else:
         model = XCeption(device=device)
+
     model = model.double()
     model.to(device)
 
-    if torch_model!=None:
+    if torch_model != None:
         print("Continue training with stored model...")
         model.load_state_dict(torch_model, strict=False)  # enable if training continued
 
@@ -81,18 +88,20 @@ def train_network(data_path, train_test, balancing_mode, architecture, batch_siz
 
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-    if torch_model_optim!=None:
+    if torch_model_optim != None:
         print("Continue training with stored optimizer...")
         optimizer.load_state_dict(torch_model_optim)
 
-
     if train_test == 'train':
 
-        train_dataset = ChestXRayDataset(os.path.join(data_path, train_test), target_resolution, 'train', balancing_mode)
-        train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, drop_last=True)
+        train_dataset = ChestXRayDataset(os.path.join(data_path, train_test), target_resolution, 'train',
+                                         balancing_mode)
+        train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True,
+                                                       drop_last=True)
 
         eval_dataset = ChestXRayDataset(os.path.join(data_path, train_test), target_resolution, 'eval', balancing_mode)
-        eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=batch_size_eval, shuffle=True, drop_last=True)
+        eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=batch_size_eval, shuffle=True,
+                                                      drop_last=True)
 
         # label 0 -> normal | label 1 -> covid | label 2 -> pneumonia
         # train
@@ -106,6 +115,8 @@ def train_network(data_path, train_test, balancing_mode, architecture, batch_siz
 
                 if architecture == 'DarkCovid':
                     pred_label = model(train_data)
+                elif architecture == 'DenseNet':
+                    pred_label = model(train_data)
                 else:
                     pred_label = model(train_data, batch_size_train)
 
@@ -116,8 +127,8 @@ def train_network(data_path, train_test, balancing_mode, architecture, batch_siz
                 optimizer.step()
 
                 epoch_train_loss.append(train_batch_loss.item())
-                loss_log_file.write('TrainLossEpoch' + str(epoch) + 'Step' + str(train_idx) + ': ' + str(train_batch_loss.item()) + '\n')
-
+                loss_log_file.write('TrainLossEpoch' + str(epoch) + 'Step' + str(train_idx) + ': ' + str(
+                    train_batch_loss.item()) + '\n')
 
             print("Avg train batch loss, epoch: " + str(epoch) + ": " + str(np.mean(epoch_train_loss)))
             write_stats_after_epoch(np.mean(epoch_train_loss), epoch, 'Train', loss_log_file)
@@ -132,13 +143,16 @@ def train_network(data_path, train_test, balancing_mode, architecture, batch_siz
 
                     if architecture == 'DarkCovid':
                         eval_pred_label = model(eval_data)
+                    elif architecture == 'DenseNet':
+                        eval_pred_label = model(eval_data)
                     else:
                         eval_pred_label = model(eval_data, batch_size_eval)
 
                     eval_batch_loss = criterion(eval_pred_label, eval_label)
 
                     epoch_eval_loss.append(eval_batch_loss.item())
-                    loss_log_file.write('EvalLossEpoch' + str(epoch) + 'Step' + str(eval_idx) + ': ' + str(eval_batch_loss.item()) + '\n')
+                    loss_log_file.write('EvalLossEpoch' + str(epoch) + 'Step' + str(eval_idx) + ': ' + str(
+                        eval_batch_loss.item()) + '\n')
 
                 if (np.mean(epoch_eval_loss) < curr_best_eval_batch_loss):
                     print("Current best eval batch loss: " + str(curr_best_eval_batch_loss))
@@ -152,22 +166,20 @@ def train_network(data_path, train_test, balancing_mode, architecture, batch_siz
                     best_loss_log_file.write(str(curr_best_eval_batch_loss) + '\n')
                     best_loss_log_file.flush()
 
-
                 print("Avg eval batch loss, epoch: " + str(epoch) + ": " + str(np.mean(epoch_eval_loss)))
 
                 write_stats_after_epoch(np.mean(epoch_eval_loss), epoch, 'Eval', loss_log_file)
-
 
         loss_log_file.close()
 
 
 if __name__ == "__main__":
 
-    data_path = ...  # insert absolute path to the data directory
+    data_path = r'C:\Users\fabio\Desktop\UniHeidelberg\2. Semester\AML\Projekt\AML\data'  # insert absolute path to the data directory
     train_test = 'train'  # train or test
 
-    architecture_arr = ['DarkCovid', 'xception']
-    balancing_mode_arr = ["no", "balance_without_aug", "balance_with_aug"]
+    architecture_arr = ['DenseNet']#, 'DarkCovid', 'xception']
+    balancing_mode_arr = ["no"]#, "balance_without_aug", "balance_with_aug"]
     learning_rate_arr = [0.001, 0.003, 0.005]
 
     for a in architecture_arr:
@@ -178,6 +190,10 @@ if __name__ == "__main__":
                     target_resolution = (256, 256)
                     batch_size_train = 32
                     batch_size_eval = 32
+                elif a == "DenseNet":
+                    target_resolution = (224, 224)
+                    batch_size_train = 4
+                    batch_size_eval = 4
                 else:
                     target_resolution = (299, 299)  # modify here if other resolution needed
                     batch_size_train = 10
@@ -186,5 +202,5 @@ if __name__ == "__main__":
                 balancing_mode = b
                 architecture = a
                 learning_rate = lr
-                train_network(data_path, train_test, balancing_mode, architecture, batch_size_train, batch_size_eval, learning_rate)
-
+                train_network(data_path, train_test, balancing_mode, architecture, batch_size_train, batch_size_eval,
+                              learning_rate)
