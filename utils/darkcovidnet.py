@@ -84,7 +84,7 @@ class DarkCovidNet(nn.Module):
         # Linear
         x = self.linear(x)
 
-        x = self.softmax(x)
+        #x = self.softmax(x)
 
         return x
 

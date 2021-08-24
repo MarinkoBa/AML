@@ -52,7 +52,7 @@ def load_model_and_optim(model_name, model_name_optimizer):
 
 def train_network(data_path, train_test, balancing_mode, architecture, batch_size_train, batch_size_eval, learning_rate):
 
-    model_name = 'model__' + architecture + '__CE__' + str(target_resolution[0]) + '_' + str(target_resolution[1]) + '__b' + str(batch_size_train) + '__lr' + str(learning_rate) + "__bm" + balancing_mode  # resolution_batchSize_learningRate_balancingMode
+    model_name = 'model__' + architecture + '__CE__' + str(target_resolution[0]) + '_' + str(target_resolution[1]) + '__b' + str(batch_size_train) + '__lr' + str(learning_rate) + "__bm" + balancing_mode + "__NOSOFTMAX" # resolution_batchSize_learningRate_balancingMode
     model_name_optimizer = model_name + '_optim'  # resolution_batchsize_learning_rate
 
     print("Used NN Architecture: " + architecture)
@@ -134,6 +134,7 @@ def train_network(data_path, train_test, balancing_mode, architecture, batch_siz
                         eval_pred_label = model(eval_data)
                     else:
                         eval_pred_label = model(eval_data, batch_size_eval)
+
                     eval_batch_loss = criterion(eval_pred_label, eval_label)
 
                     epoch_eval_loss.append(eval_batch_loss.item())
@@ -164,17 +165,6 @@ if __name__ == "__main__":
 
     data_path = ...  # insert absolute path to the data directory
     train_test = 'train'  # train or test
-    balancing_mode = 'balance_without_aug'  # can be: no | balance_without_aug | balance_with_aug
-
-    architecture = "DarkCovid"  # DarkCovid or xception
-    if architecture == "DarkCovid":
-        target_resolution = (256, 256)
-    else:
-        target_resolution = (299, 299)  # modify here if other resolution needed
-
-    batch_size_train = 32
-    batch_size_eval = 32
-    learning_rate = 0.001
 
     architecture_arr = ['DarkCovid', 'xception']
     balancing_mode_arr = ["no", "balance_without_aug", "balance_with_aug"]
@@ -183,6 +173,15 @@ if __name__ == "__main__":
     for a in architecture_arr:
         for b in balancing_mode_arr:
             for lr in learning_rate_arr:
+
+                if a == "DarkCovid":
+                    target_resolution = (256, 256)
+                    batch_size_train = 32
+                    batch_size_eval = 32
+                else:
+                    target_resolution = (299, 299)  # modify here if other resolution needed
+                    batch_size_train = 10
+                    batch_size_eval = 10
 
                 balancing_mode = b
                 architecture = a
