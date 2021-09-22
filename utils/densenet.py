@@ -17,8 +17,8 @@ class DenseNet(nn.Module):
         """
             Parameters
             ----------
-            device : str
-                'cuda' for gpu or 'cpu' for CPU (values can be detected automatically by torch.device())
+            device: device
+                Used device (values can be detected automatically by torch.device())
             num_classes : int
                 amount of classification classes
             device_ids : array
@@ -159,8 +159,8 @@ class DenseBlock(nn.Module):
                 amount of DenseLayers in this DenseBlock
             growth_rate : int
                 Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
-            device : str
-                'cuda' for gpu or 'cpu' for CPU (values can be detected automatically by torch.device())
+            device: device
+                Used device (values can be detected automatically by torch.device())
             device_ids : array
                 Contains indices of the devices
         """

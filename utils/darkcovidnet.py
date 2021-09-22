@@ -25,8 +25,8 @@ class DarkCovidNet(nn.Module):
                 Amount of incoming feature_maps.
             num_labels : int
                 Number of classification classes.
-            device: str
-                'cuda' for gpu or 'cpu' for CPU (values can be detected automatically by torch.device())
+            device: device
+                Used device (values can be detected automatically by torch.device())
         """
         super(DarkCovidNet, self).__init__()
 
