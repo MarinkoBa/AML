@@ -30,12 +30,16 @@ For training of the network we used the Chest X-ray dataset from kaggle (https:/
 - Implementation Xception network
 - Implementation DarkCovid network
 - First Training/Performance test with unbalanced data set
-
-#### TO DO
+- Implementation of 2D DenseNet
 - Implementation of Metrics (Recall, Secificity, Precision, F1-Score, Accuracy)
 - Data Augmentation: Random rotation angle  = 10°, Horisontal Flip and Zoom Range = 0.4
 - Balanced Dataset: ~500x Covid, ~500x Normal, ~500x Pneunomia (randomly picked from the sets) and increase dataset with augmentation to 1500x Covid, 1500x Normal, 1500x Pneunomia. The original train set includes 460 Covid (300 RGB, 124 L, 36 RGBA -> for differences see https://pillow.readthedocs.io/en/stable/handbook/concepts.html#concept-modes), 1266 Normal and 3418 Pneunomia images.
-			
-- Implementation of 2D DenseNet
+
+
+#### TO DO
+- GAN for higher resolution		
+- Train different DenseNet Architecutres based on balanced without augmentation dataset and learning_rate = 0.001 (-> choose best)
+- Train DarkCovidNet to show which dataset is most suitable (no_balancing_no_aug, balancing_no_aug, balancing_and_aug)
+- Train Xception based on best dataset and with different learning rates (evaluate best one)
 - 5-fold Cross Validation to Compare the Models
 - Maybe: build Ensemble of the Models and test performance
