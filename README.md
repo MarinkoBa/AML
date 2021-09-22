@@ -27,9 +27,9 @@ For training of the network we used the Chest X-ray dataset from kaggle (https:/
 
 To Achieve the objective, the follwoing three neural network approaches are used:
 
-DarkCovidNet by Ozturk (2020): https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7187882/pdf/main.pdf
-DenseNet by Huang (2016): https://arxiv.org/abs/1608.06993
-Xception by Jain (2020): https://link.springer.com/content/pdf/10.1007/s10489-020-01902-1.pdf
+- DarkCovidNet by Ozturk (2020): https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7187882/pdf/main.pdf
+- DenseNet by Huang (2016): https://arxiv.org/abs/1608.06993
+- Xception by Jain (2020): https://link.springer.com/content/pdf/10.1007/s10489-020-01902-1.pdf
 
 #### Results
 
