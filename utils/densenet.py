@@ -9,12 +9,37 @@ DENSENET264 = 'densenet-264'
 
 class DenseNet(nn.Module):
     '''
-    TODO Dokumentation
+    Implementation of the DenseNet, which was proposed by Huang et al.
+    https://arxiv.org/abs/1608.06993.
     '''
-    def __init__(self, device, num_classes=3, device_ids=[0], growth_rate=32, architecture='densenet-121'):
-        super(DenseNet, self).__init__()
-        # determine type of densenet
 
+    def __init__(self, device, num_classes=3, device_ids=[0], growth_rate=32, architecture='densenet-121'):
+        """
+            Parameters
+            ----------
+            device : str
+                'cuda' for gpu or 'cpu' for CPU (values can be detected automatically by torch.device())
+            num_classes : int
+                amount of classification classes
+            device_ids : array
+                Contains indices of the devices
+            growth_rate : int
+                Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
+            architecture : str
+                Determines the type of the DenseNet architecture.
+                The different architectures has a different amount of layers.
+                They were proposed by Huang et al. in https://arxiv.org/abs/1608.06993.
+
+                Architectures:
+                    - 'densenet-121'
+                    - 'densenet-169'
+                    - 'densenet-201'
+                    - 'densenet-264'
+
+        """
+        super(DenseNet, self).__init__()
+
+        # determine type of DenseNet architecture
         if architecture is DENSENET169:
             layers = [6, 12, 32, 32]
         elif architecture is DENSENET201:
@@ -114,14 +139,31 @@ class DenseNet(nn.Module):
         x = self.global_avg_pool(x)
         x = torch.flatten(x, start_dim=1)
         x = self.linear(x)
-        #x = self.softmax(x)
+        # x = self.softmax(x)
 
         return x
 
 
 class DenseBlock(nn.Module):
-
+    """
+    A DenseBlock consists of multiple DenseLayers.
+    Here the Amount of feature maps will be increased.
+    """
     def __init__(self, in_channels, n_layers, growth_rate, device, device_ids=[0]):
+        """
+            Parameters
+            ----------
+            in_channels : int
+                amount of incoming feature_maps
+            n_layers : int
+                amount of DenseLayers in this DenseBlock
+            growth_rate : int
+                Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
+            device : str
+                'cuda' for gpu or 'cpu' for CPU (values can be detected automatically by torch.device())
+            device_ids : array
+                Contains indices of the devices
+        """
         super(DenseBlock, self).__init__()
         self.n_layers = n_layers
         self.in_channels = in_channels
@@ -144,8 +186,18 @@ class DenseBlock(nn.Module):
 
 
 class DenseLayer(nn.Module):
-
+    """
+    Increases the amount of incoming feature maps by growth rate.
+    """
     def __init__(self, in_channels, growth_rate):
+        """
+            Parameters
+            ----------
+            in_channels : int
+                amount of incoming feature_maps
+            growth_rate : int
+                Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
+        """
         super(DenseLayer, self).__init__()
         self.batch_norm = nn.BatchNorm2d(in_channels)
         self.relu = nn.ReLU()
@@ -173,7 +225,19 @@ class DenseLayer(nn.Module):
 
 
 class TransitionLayer(nn.Module):
+    """
+    The Transition Layer is used to downsize the amount and size of feature maps.
+    First, for downsizing the amount of Feature maps a Convolutional Layers is used.
+    Second, to half the size of the feature maps an Average-Pooling_Layer is used.
+    """
+
     def __init__(self, in_channels):
+        """
+            Parameters
+            ----------
+            in_channels : int
+                amount of incoming feature_maps
+        """
         super(TransitionLayer, self).__init__()
         self.batch_norm = nn.BatchNorm2d(in_channels)
         self.relu = nn.ReLU()

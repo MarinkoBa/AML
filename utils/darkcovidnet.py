@@ -17,6 +17,16 @@ class DarkCovidNet(nn.Module):
     '''
 
     def __init__(self, in_channels, num_labels, device):
+        """
+            Parameters
+            ----------
+            in_channels : int
+                Amount of incoming feature_maps.
+            num_labels : int
+                Number of classification classes.
+            device: str
+                'cuda' for gpu or 'cpu' for CPU (values can be detected automatically by torch.device())
+        """
         super(DarkCovidNet, self).__init__()
 
         self.device = device
@@ -91,6 +101,18 @@ class DarkCovidNet(nn.Module):
 
 class DN_Layer(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size=(3, 3), stride=(1, 1)):
+        """
+            Parameters
+            ----------
+            in_channels : int
+                Amount of incoming feature_maps.
+            out_channels : int
+                Amount of outgoing feature_maps.
+            kernel_size : Tuple (int,int)
+                Kernelsize of the 2D-Conv.-Layer.
+            stride : Tuple (int,int)
+                Size of the kernel stride of the Conv.-Layer
+        """
         super(DN_Layer, self).__init__()
         self.leaky_relu = nn.LeakyReLU()
         self.batch_normalization = nn.BatchNorm2d(out_channels)
@@ -111,6 +133,15 @@ class DN_Block(nn.Module):
     '''
 
     def __init__(self, in_channels, out_channels):
+        """
+            Parameters
+            ----------
+            in_channels : int
+                Amount of incoming feature_maps.
+            out_channels : int
+                Amount of outgoing feature_maps.
+        """
+
         super(DN_Block, self).__init__()
         self.dn_layer1 = DN_Layer(in_channels=in_channels, out_channels=out_channels)
         self.dn_layer2 = DN_Layer(in_channels=out_channels, out_channels=in_channels, kernel_size=1)
