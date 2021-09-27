@@ -2,8 +2,18 @@ import torch
 import torch.nn as nn
 
 class XCeption(nn.Module):
+    '''
+    Implementation of the Xception net, which was proposed by Chollet.
+    https://arxiv.org/abs/1610.02357.
+    '''
 
     def __init__(self, device):
+        """
+        Parameters
+        ----------
+        device:             device
+                            Used device (values can be detected automatically by torch.device())
+        """
         super(XCeption, self).__init__()
 
         self.device = device
@@ -18,7 +28,6 @@ class XCeption(nn.Module):
         # Entry flow 1/3
         self.residual11 = torch.nn.DataParallel(Conv2DBatchNorm(in_channels=64, out_channels=128, kernel_size=(1,1), stride=(2,2)).to(device))
 
-
         self.separableConv11 = torch.nn.DataParallel(SeparableConv2d(in_channels=64, out_channels=128, kernel_size=(3,3)).to(device))
 
         self.relu11 = torch.nn.DataParallel(nn.ReLU().to(device))
@@ -28,7 +37,6 @@ class XCeption(nn.Module):
 
         # Entry flow 2/3
         self.residual21 = torch.nn.DataParallel(Conv2DBatchNorm(in_channels=128, out_channels=256, kernel_size=(1,1), stride=(2,2)).to(device))
-
 
         self.relu21 = torch.nn.DataParallel(nn.ReLU().to(device))
         self.separableConv21 = torch.nn.DataParallel(SeparableConv2d(in_channels=128, out_channels=256, kernel_size=(3,3)).to(device))
@@ -49,9 +57,7 @@ class XCeption(nn.Module):
 
         self.maxPool31 = torch.nn.DataParallel(nn.MaxPool2d(kernel_size=(3,3), stride=(2,2), padding=1).to(device))
 
-
         # Middle flow
-
         self.middleFlow1 = torch.nn.DataParallel(MittleFlow().to(device))
         self.middleFlow2 = torch.nn.DataParallel(MittleFlow().to(device))
         self.middleFlow3 = torch.nn.DataParallel(MittleFlow().to(device))
@@ -61,10 +67,8 @@ class XCeption(nn.Module):
         self.middleFlow7 = torch.nn.DataParallel(MittleFlow().to(device))
         self.middleFlow8 = torch.nn.DataParallel(MittleFlow().to(device))
 
-
         # Exit flow
         self.residualExitFlow = torch.nn.DataParallel(Conv2DBatchNorm(in_channels=728, out_channels=1024, kernel_size=(1,1), stride=(2,2)).to(device))
-
 
         self.reluExitFlow1 = torch.nn.DataParallel(nn.ReLU().to(device))
         self.separableConvExitFlow1 = torch.nn.DataParallel(SeparableConv2d(in_channels=728, out_channels=728, kernel_size=(3,3)).to(device))
@@ -200,7 +204,6 @@ class XCeption(nn.Module):
 
         x = self.denseLayer2(x)
 
-        #x = self.softmax(x)
         return x
 
 

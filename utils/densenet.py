@@ -15,27 +15,25 @@ class DenseNet(nn.Module):
 
     def __init__(self, device, num_classes=3, device_ids=[0], growth_rate=32, architecture='densenet-121'):
         """
-            Parameters
-            ----------
-            device: device
-                Used device (values can be detected automatically by torch.device())
-            num_classes : int
-                amount of classification classes
-            device_ids : array
-                Contains indices of the devices
-            growth_rate : int
-                Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
-            architecture : str
-                Determines the type of the DenseNet architecture.
-                The different architectures has a different amount of layers.
-                They were proposed by Huang et al. in https://arxiv.org/abs/1608.06993.
-
-                Architectures:
-                    - 'densenet-121'
-                    - 'densenet-169'
-                    - 'densenet-201'
-                    - 'densenet-264'
-
+        Parameters
+        ----------
+        device:                 device
+                                Used device (values can be detected automatically by torch.device())
+        num_classes:            int
+                                amount of classification classes
+        device_ids:             array
+                                Contains indices of the devices
+        growth_rate:            int
+                                Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
+        architecture:           str
+                                Determines the type of the DenseNet architecture.
+                                The different architectures has a different amount of layers.
+                                They were proposed by Huang et al. in https://arxiv.org/abs/1608.06993.
+                                Architectures:
+                                    - 'densenet-121'
+                                    - 'densenet-169'
+                                    - 'densenet-201'
+                                    - 'densenet-264'
         """
         super(DenseNet, self).__init__()
 
@@ -151,18 +149,18 @@ class DenseBlock(nn.Module):
     """
     def __init__(self, in_channels, n_layers, growth_rate, device, device_ids=[0]):
         """
-            Parameters
-            ----------
-            in_channels : int
-                amount of incoming feature_maps
-            n_layers : int
-                amount of DenseLayers in this DenseBlock
-            growth_rate : int
-                Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
-            device: device
-                Used device (values can be detected automatically by torch.device())
-            device_ids : array
-                Contains indices of the devices
+        Parameters
+        ----------
+        in_channels:            int
+                                amount of incoming feature_maps
+        n_layers:               int
+                                amount of DenseLayers in this DenseBlock
+        growth_rate:            int
+                                Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
+        device:                 device
+                                Used device (values can be detected automatically by torch.device())
+        device_ids:             array
+                                Contains indices of the devices
         """
         super(DenseBlock, self).__init__()
         self.n_layers = n_layers
@@ -191,12 +189,12 @@ class DenseLayer(nn.Module):
     """
     def __init__(self, in_channels, growth_rate):
         """
-            Parameters
-            ----------
-            in_channels : int
-                amount of incoming feature_maps
-            growth_rate : int
-                Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
+        Parameters
+        ----------
+        in_channels:                int
+                                    amount of incoming feature_maps
+        growth_rate:                int
+                                    Amount of feature maps, which is produced by each Dense Layer. Hyperparameter of the network.
         """
         super(DenseLayer, self).__init__()
         self.batch_norm = nn.BatchNorm2d(in_channels)
@@ -233,10 +231,10 @@ class TransitionLayer(nn.Module):
 
     def __init__(self, in_channels):
         """
-            Parameters
-            ----------
-            in_channels : int
-                amount of incoming feature_maps
+        Parameters
+        ----------
+        in_channels:                int
+                                    amount of incoming feature_maps
         """
         super(TransitionLayer, self).__init__()
         self.batch_norm = nn.BatchNorm2d(in_channels)

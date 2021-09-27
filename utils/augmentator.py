@@ -1,9 +1,9 @@
 import cv2
-from matplotlib import pyplot as plt
 from PIL import Image
 from matplotlib import image
 import numpy as np
 import os
+from utils.plotter import plot_augmentations
 
 
 def augment_data(normal_imgs, covid_imgs, pneumonia_imgs, plot=False):
@@ -82,6 +82,7 @@ def zoom_04(normal_img_path, normal_img):
                             Path to the normal image without augmentation
     normal_img:             Image
                             Source image which will be augmented
+
     Returns
     -------
     normal_img_zoom_path:   String
@@ -113,6 +114,7 @@ def flip_horizontal(normal_img_path, normal_img):
                             Path to the normal image without augmentation
     normal_img:             Image
                             Source image which will be augmented
+
     Returns
     -------
     normal_img_horizontal_flip_path:   String
@@ -144,6 +146,7 @@ def rotate_10_degrees(normal_img_path, normal_img):
                             Path to the normal image without augmentation
     normal_img:             Image
                             Source image which will be augmented
+
     Returns
     -------
     normal_img_rotated_path:   String
@@ -211,21 +214,3 @@ def balance_dataset_undersampling(normal_imgs, covid_imgs, pneumonia_imgs):
     all_images = list(np.hstack([random_normal_imgs, random_covid_imgs, random_pneumonia_imgs]))
 
     return all_images
-
-
-def plot_augmentations(normal_img, normal_img_rotated, normal_img_horizontal_flip, normal_img_zoom):
-
-    fig, ax = plt.subplots(2, 2)
-    ax[0, 0].imshow(normal_img)
-    ax[0, 0].set_title('Original')
-
-    ax[0, 1].imshow(normal_img_rotated)
-    ax[0, 1].set_title('Rotated')
-
-    ax[1, 0].imshow(normal_img_horizontal_flip)
-    ax[1, 0].set_title('Horizontal Flip')
-
-    ax[1, 1].imshow(normal_img_zoom)
-    ax[1, 1].set_title('Zoom 0.4')
-
-    plt.show()

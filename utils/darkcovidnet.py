@@ -4,29 +4,29 @@ import torch
 
 class DarkCovidNet(nn.Module):
     '''
-        DarkCovidNet was developed by Ozturk 2020 based on the Darknet-19 model.
-        https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7187882/pdf/main.pdf
-        Model was created to fulfill classification task of 2D-CT images for the cases of binary (Covid, No-Finings) and multi-classification (Covid, No-Finings, Pneumonia).
+    DarkCovidNet was developed by Ozturk 2020 based on the Darknet-19 model.
+    https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7187882/pdf/main.pdf
+    Model was created to fulfill classification task of 2D-CT images for the cases of binary (Covid, No-Finings) and multi-classification (Covid, No-Finings, Pneumonia).
 
-        Layer layout of the network:
-        C: Convolutional Layer (17-layers)
-        M: Max-Pooling (5-layers)
-        []: notes Blocks of Conv-layers
+    Layer layout of the network:
+    C: Convolutional Layer (17-layers)
+    M: Max-Pooling (5-layers)
+    []: notes Blocks of Conv-layers
 
-        C1-M1-C2-M2-[C3-C4-C5]-M3-[C6-C7-C8]-M4-[C9-C10-C11]-M5-[C12-C13-C14]-C15-C16-C17-Flatten-Linear
+    C1-M1-C2-M2-[C3-C4-C5]-M3-[C6-C7-C8]-M4-[C9-C10-C11]-M5-[C12-C13-C14]-C15-C16-C17-Flatten-Linear
 
     '''
 
     def __init__(self, in_channels, num_labels, device):
         """
-            Parameters
-            ----------
-            in_channels : int
-                Amount of incoming feature_maps.
-            num_labels : int
-                Number of classification classes.
-            device: device
-                Used device (values can be detected automatically by torch.device())
+        Parameters
+        ----------
+        in_channels:            int
+                                Amount of incoming feature_maps.
+        num_labels:             int
+                                Number of classification classes.
+        device:                 device
+                                Used device (values can be detected automatically by torch.device())
         """
         super(DarkCovidNet, self).__init__()
 
@@ -103,16 +103,16 @@ class DarkCovidNet(nn.Module):
 class DN_Layer(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size=(3, 3), stride=(1, 1)):
         """
-            Parameters
-            ----------
-            in_channels : int
-                Amount of incoming feature_maps.
-            out_channels : int
-                Amount of outgoing feature_maps.
-            kernel_size : Tuple (int,int)
-                Kernelsize of the 2D-Conv.-Layer.
-            stride : Tuple (int,int)
-                Size of the kernel stride of the Conv.-Layer
+        Parameters
+        ----------
+        in_channels:               int
+                                   Amount of incoming feature_maps.
+        out_channels:              int
+                                   Amount of outgoing feature_maps.
+        kernel_size:               Tuple (int,int)
+                                   Kernelsize of the 2D-Conv.-Layer.
+        stride:                    Tuple (int,int)
+                                   Size of the kernel stride of the Conv.-Layer
         """
         super(DN_Layer, self).__init__()
         self.leaky_relu = nn.LeakyReLU()
@@ -135,12 +135,12 @@ class DN_Block(nn.Module):
 
     def __init__(self, in_channels, out_channels):
         """
-            Parameters
-            ----------
-            in_channels : int
-                Amount of incoming feature_maps.
-            out_channels : int
-                Amount of outgoing feature_maps.
+        Parameters
+        ----------
+        in_channels:                int
+                                    Amount of incoming feature_maps.
+        out_channels:               int
+                                    Amount of outgoing feature_maps.
         """
 
         super(DN_Block, self).__init__()
