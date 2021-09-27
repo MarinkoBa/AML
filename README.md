@@ -41,7 +41,7 @@ To Achieve the objective, the follwoing three neural network approaches are used
 
 In case of the evaluation metrics like Precision, Recall, F1-Score and Accuracy, the trained models achieved following results:
 
-![plot](Metriken.PNG)
+![plot](plots/Metriken.PNG)
 
 The corresponding confusion matrices of the above mentioned models (DarkCovidNet, DenseNet-121 and Xception net from left to right): 
 
