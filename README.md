@@ -53,7 +53,6 @@ To Achieve the objective, the follwoing three neural network approaches are used
 - Train DarkCovidNet to show which dataset is most suitable (no_balancing_no_aug, balancing_no_aug, balancing_and_aug)
 - Train Xception based on best dataset and with different learning rates (evaluate best one)
 
-#### TO DO
+#### FUTURE WORK
 - GAN for higher resolution	
-- 5-fold Cross Validation to Compare the Models
-- Maybe: build Ensemble of the Models and test performance
+- build Ensemble of the Models and test performance
