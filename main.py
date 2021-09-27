@@ -227,8 +227,6 @@ def train_test_network(data_path, train_test, balancing_mode, architecture, batc
                             Learning rate used for the training
     """
 
-
-
     model_name = 'model__' + architecture + '__CE__' + str(target_resolution[0]) + '_' + str(
         target_resolution[1]) + '__b' + str(batch_size_train) + '__lr' + str(
         learning_rate) + "__bm" + balancing_mode + "__NOSOFTMAX"  # resolution_batchSize_learningRate_balancingMode
