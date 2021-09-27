@@ -39,6 +39,10 @@ To Achieve the objective, the follwoing three neural network approaches are used
 - The best DenseNet was trained on a balanced dataset without augmentation and a learning rate of 0.001.
 - The best Xception Network was trained on a balanced dataset with augmentation and a learning rate of 0.001.
 
+In case of the evaluation metrics like Precision, Recall, F1-Score and Accuracy, the trained models achieved following results:
+
+![plot](Metriken.PNG)
+
 #### Done
 
 - Preprocessing including reshaping
