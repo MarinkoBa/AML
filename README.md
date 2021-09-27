@@ -33,7 +33,7 @@ To Achieve the objective, the follwoing three neural network approaches are used
 
 #### Results
 
-![plot](BestArchitecturesComparison.png)
+![plot](plots/BestArchitecturesComparison_20_font_cut.png)
 
 - The best DarkCovidNet was trained on a balanced dataset with augmentation and a learning rate of 0.003.
 - The best DenseNet was trained on a balanced dataset without augmentation and a learning rate of 0.001.
