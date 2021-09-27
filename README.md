@@ -47,6 +47,8 @@ The corresponding confusion matrices of the above mentioned models (DarkCovidNet
 
 ![plot](plots/best_models_confusion.JPG)
 
+Unfortunatelly, due to the limit in upload size it was not possible to upload the trained models and optimizer. If needed please contact us under email adress.
+
 #### Done
 
 - Preprocessing including reshaping
