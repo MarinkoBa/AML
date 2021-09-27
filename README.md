@@ -43,6 +43,10 @@ In case of the evaluation metrics like Precision, Recall, F1-Score and Accuracy,
 
 ![plot](Metriken.PNG)
 
+The corresponding confusion matrices of the above mentioned models (DarkCovidNet, DenseNet-121 and Xception net from left to right): 
+
+![plot](plots/best_models_confusion.JPG)
+
 #### Done
 
 - Preprocessing including reshaping
