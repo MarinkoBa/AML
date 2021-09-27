@@ -3,7 +3,7 @@
 #### The goal is to build a binary/multi class classificator, which will be able to distinguish between COVID-19, Pneumonia and Normal classes of X-ray chest images. Due to the current COVID-19 situation the radiologists could need help while recognizing positive COVID-19 cases.
 
 #### Dataset
-For training of the network we used the Chest X-ray dataset from kaggle (https://www.kaggle.com/prashant268/chest-xray-covid19-pneumonia). Dataset is organized into 2 folders (train, test) and both train and test contain 3 subfolders (COVID19, PNEUMONIA, NORMAL). DataSet contains total 6432 x-ray images and test data have 20% of total images.
+For training of the network we used the Chest X-ray dataset from kaggle (https://www.kaggle.com/prashant268/chest-xray-covid19-pneumonia). Dataset is organized into 2 folders (train, test) and both train and test contain 3 subfolders (COVID19, PNEUMONIA, NORMAL). Dataset contains in total 6432 x-ray images of which 20% belong to the test set.
 
 #### Chest X Ray images data directory structure:
 	- data 
@@ -29,7 +29,7 @@ To Achieve the objective, the follwoing three neural network approaches are used
 
 - DarkCovidNet by Ozturk (2020): https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7187882/pdf/main.pdf
 - DenseNet by Huang (2016): https://arxiv.org/abs/1608.06993
-- Xception by Jain (2020): https://link.springer.com/content/pdf/10.1007/s10489-020-01902-1.pdf
+- Xception by Chollet (2017): https://arxiv.org/abs/1610.02357
 
 #### Results
 
